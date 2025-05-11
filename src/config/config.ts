@@ -14,6 +14,8 @@ interface EnvVars {
   DB_PASSWORD: string;
   DB_NAME: string;
   DB_PORT: string;
+  PASSWORD_SALT: string;
+  PIN_SALT: string;
 }
 
 const envVarsSchema = Joi.object<EnvVars>({
@@ -26,6 +28,8 @@ const envVarsSchema = Joi.object<EnvVars>({
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
   DB_PORT: Joi.string().required().default("9090"),
+  PASSWORD_SALT: Joi.string().required(),
+  PIN_SALT: Joi.string().required(),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema
@@ -49,6 +53,12 @@ const config = {
     password: envVars.DB_PASSWORD,
     name: envVars.DB_NAME,
     port: envVars.DB_PORT,
+  },
+  password: {
+    salt: envVars.PASSWORD_SALT,
+  },
+  pin: {
+    salt: envVars.PIN_SALT,
   },
 };
 

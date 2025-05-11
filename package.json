@@ -1,0 +1,35 @@
+{
+  "name": "demo_credit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "npx tsc --build",
+    "build:watch": "npx tsc  --build  --watch",
+    "dev": "nodemon  ./src/index.ts",
+    "knex": "./node_modules/.bin/knex --knexfile src/db/knexfile.ts",
+    "migrate:up": "knex migrate:latest --knexfile ./src/db/knexfile.ts",
+    "migrate:down": "knex migrate:down --knexfile ./src/db/knexfile.ts",
+    "migrate:rollback": "knex migrate:rollback --knexfile ./src/db/knexfile.ts",
+    "migrate:make": "knex migrate:make --knexfile ./src/db/knexfile.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "knex": "^3.1.0",
+    "mysql2": "^3.14.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

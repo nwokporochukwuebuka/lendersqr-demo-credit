@@ -60,4 +60,4 @@ const dbConfig: IKnexConfig = {
   },
 };
 
-module.exports = dbConfig;
+export default dbConfig;

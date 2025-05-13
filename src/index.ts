@@ -1,5 +1,8 @@
-import express, { Express } from "express";
+require("dotenv").config();
 
-const app: Express = express();
+// import { Application } from "./application";
+import { Application } from "./application";
 
-const port: number = process.env.PORT ? parseInt(process.env.PORT) : 8080;
+// Create and start the application using the entry point class
+const application = new Application();
+application.initialize();

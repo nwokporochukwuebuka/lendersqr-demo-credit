@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { IAuthRegister } from "../interface";
 import { password } from "./custom.validation";
 
 export const registerValidation = {

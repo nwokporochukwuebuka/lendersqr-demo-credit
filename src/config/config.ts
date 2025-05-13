@@ -16,6 +16,8 @@ interface EnvVars {
   DB_PORT: string;
   PASSWORD_SALT: string;
   PIN_SALT: string;
+  ADJUTOR_BASE_URL: string;
+  ADJUTOR_API_KEY: string;
 }
 
 const envVarsSchema = Joi.object<EnvVars>({
@@ -30,6 +32,8 @@ const envVarsSchema = Joi.object<EnvVars>({
   DB_PORT: Joi.string().required().default("9090"),
   PASSWORD_SALT: Joi.string().required(),
   PIN_SALT: Joi.string().required(),
+  ADJUTOR_BASE_URL: Joi.string().required(),
+  ADJUTOR_API_KEY: Joi.string().required(),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema
@@ -59,6 +63,10 @@ const config = {
   },
   pin: {
     salt: envVars.PIN_SALT,
+  },
+  adjutor: {
+    baseUrl: envVars.ADJUTOR_BASE_URL,
+    apiKey: envVars.ADJUTOR_API_KEY,
   },
 };
 

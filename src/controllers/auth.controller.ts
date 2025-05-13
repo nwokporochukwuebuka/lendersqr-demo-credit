@@ -3,14 +3,14 @@ import httpStatus from "http-status";
 import { IAuthLogin, IAuthRegister, TableNames } from "../interface";
 import UserService from "../services/user.service";
 import { v4 as uuidv4 } from "uuid";
-// import ApiError from "../utils/ApiError";
-import { errorResponse, successResponse } from "../utils/response";
+import { successResponse } from "../utils/response";
 import { catchError } from "../utils/catchError";
 import { AxiosService } from "../utils/axios";
 import { compareHash, generateHash } from "../utils/hash";
 import db from "../db/knex";
 import JWTService from "../services/jwt.service";
 import ApiError from "../utils/ApiError";
+import config from "../config/config";
 
 export default class AuthController {
   public async register(req: Request, res: Response) {
@@ -23,8 +23,6 @@ export default class AuthController {
     );
 
     if (existingUser) {
-      // throw new ApiError(httpStatus.BAD_REQUEST, "Email already exists");
-      // return errorResponse(res, "Email already exist", httpStatus.BAD_REQUEST);
       throw new ApiError(httpStatus.BAD_REQUEST, "Email already exists!");
     }
 
@@ -32,17 +30,17 @@ export default class AuthController {
 
     const [error, data] = await catchError(
       axiosService.get(
-        `https://adjutor.lendsqr.com/v2/verification/karma/${payload.email}`,
+        `${config.adjutor.baseUrl}/verification/karma/${payload.email}`,
         {
           headers: {
-            Authorization: `Bearer sk_live_2mgOGv0upBuVEsAwFGpOYr1IHG2Ps9RK6vXDLLeS`,
+            Authorization: `Bearer ${config.adjutor.apiKey}`,
           },
         }
       )
     );
 
     if (error) {
-      return errorResponse(res, error.message, httpStatus.BAD_REQUEST);
+      throw new ApiError(httpStatus.BAD_REQUEST, error.message);
       // @ts-ignore
     } else if (data?.status !== "success") {
       throw new ApiError(
@@ -79,11 +77,9 @@ export default class AuthController {
     // fetching customer with the wallet
     const user = await userService.fetchUserWithWalletByEmail(payload.email);
 
-    console.log({ user });
-
     // generate token
     const jwt = new JWTService();
-    const accessToken = jwt.accessToken({ userId: user.id });
+    const accessToken = jwt.accessToken({ userId: user.userId });
 
     const result = {
       user: {
@@ -131,7 +127,7 @@ export default class AuthController {
     }
 
     const jwt = new JWTService();
-    const accessToken = jwt.accessToken({ userId: existingUser.id });
+    const accessToken = jwt.accessToken({ userId: existingUser.userId });
 
     const result = {
       user: {

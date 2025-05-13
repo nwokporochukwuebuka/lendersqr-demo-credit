@@ -11,8 +11,8 @@ export default class JWTService {
     return token;
   }
 
-  verifyToken(token: string) {
+  verifyToken<T>(token: string): T {
     const decoded = jwt.verify(token, this._secret);
-    return decoded;
+    return decoded as T;
   }
 }

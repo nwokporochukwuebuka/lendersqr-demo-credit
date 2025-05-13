@@ -1,5 +1,8 @@
 import express, { Router as ExpressRouter } from "express";
 import AuthRoute from "./auth.route";
+import UserRoute from "./user.route";
+import { auth } from "../middlewares/auth.middleware";
+import WalletRoute from "./wallet.route";
 
 export class Router {
   public routes: ExpressRouter;
@@ -10,7 +13,7 @@ export class Router {
 
   private initializeRoutes() {
     this.routes.use("/auth", new AuthRoute().router);
-    // this.routes.use("/users", isAuthenticated, new UserRoutes().router);
-    // this.routes.use("/wallets", isAuthenticated, new WalletRoutes().router);
+    this.routes.use("/user", auth, new UserRoute().router);
+    this.routes.use("/wallets", auth, new WalletRoute().router);
   }
 }

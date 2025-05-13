@@ -8,7 +8,7 @@ export default class UserService {
     return user;
   }
 
-  public async findUserById(id: string): Promise<IUser> {
+  public async findUserById(id: string) {
     const user = await db(TableNames.USER).where({ id }).first();
     return user;
   }
@@ -37,8 +37,22 @@ export default class UserService {
 
     return data;
   }
+  public async fetchUserWithWalletById(id: string) {
+    const data = await db(TableNames.USER)
+      .leftJoin(TableNames.WALLET, "users.id", "wallets.userId")
+      .select(
+        "users.id as userId",
+        "users.firstName",
+        "users.lastName",
+        "users.email",
+        "users.password",
+        "users.tranxPin",
+        "wallets.id as walletId",
+        "wallets.balance"
+      )
+      .where({ "users.id": id })
+      .first();
 
-  // sk_live_2mgOGv0upBuVEsAwFGpOYr1IHG2Ps9RK6vXDLLeS
-
-  // https://adjutor.lendsqr.com/v2/verification/karma/:identity
+    return data;
+  }
 }

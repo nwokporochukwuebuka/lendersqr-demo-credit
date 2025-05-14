@@ -1,6 +1,12 @@
 import { Router } from "express";
 import WalletController from "../controllers/wallet.controller";
 import catchAsync from "../utils/catchAsync";
+import validate from "../middlewares/validate";
+import {
+  fundWalletValidation,
+  transferFundsValidation,
+  withdrawFundsValidation,
+} from "../validations/wallet.validation";
 
 export default class WalletRoute {
   router: Router;
@@ -16,6 +22,21 @@ export default class WalletRoute {
     this.router.get(
       "/my-wallet",
       catchAsync(this.walletController.fetchUsersWallet)
+    );
+    this.router.post(
+      "/fund",
+      validate(fundWalletValidation),
+      catchAsync(this.walletController.fundWallet)
+    );
+    this.router.post(
+      "/withdraw",
+      validate(withdrawFundsValidation),
+      catchAsync(this.walletController.withdrawFunds)
+    );
+    this.router.post(
+      "/transfer",
+      validate(transferFundsValidation),
+      catchAsync(this.walletController.transferFunds)
     );
   }
 }

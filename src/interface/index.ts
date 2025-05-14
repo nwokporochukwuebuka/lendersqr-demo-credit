@@ -13,18 +13,18 @@ export const TableNames = {
 } as const;
 
 // Table Types
-export const TransactionType = {
-  DEPOSIT: "deposit",
-  WITHDRAWAL: "withdrawal",
-  TRANSFER: "transfer",
-} as const;
+export enum TransactionType {
+  DEPOSIT = "deposit",
+  WITHDRAWAL = "withdrawal",
+  TRANSFER = "transfer",
+}
 
 // Transaction Status
-export const TransactionStatus = {
-  PENDING: "pending",
-  SUCCESS: "success",
-  FAILED: "failed",
-};
+export enum TransactionStatus {
+  PENDING = "pending",
+  SUCCESS = "success",
+  FAILED = "failed",
+}
 
 export interface IAuthRegister {
   email: string;

@@ -3,7 +3,6 @@ import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
 import JWTService from "../services/jwt.service";
 import UserService from "../services/user.service";
-import { exclude } from "../utils/exclude-field";
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -23,10 +22,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   }
 
   // @ts-ignore
-  req.user = exclude(user, ["password", "tranxPin"]);
-  // console.log({ user });
+  req.user = user;
+
   next();
-  //   } catch (error) {
-  //     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid token");
-  //   }
 };

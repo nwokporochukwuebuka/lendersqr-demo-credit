@@ -1,5 +1,7 @@
+import httpStatus from "http-status";
 import db from "../db/knex";
 import { TableNames } from "../interface";
+import ApiError from "../utils/ApiError";
 
 export default class WalletService {
   // fetch all wallets
@@ -15,10 +17,6 @@ export default class WalletService {
       );
     return wallets;
   }
-  // fetch user's wallet
-  //   async fetchSingleWallet(walletId: string) {
-
-  //   }
 
   async fetchWalletByUserId(userId: string) {
     const wallet = await db(TableNames.WALLET)
@@ -32,7 +30,49 @@ export default class WalletService {
       .first();
     return wallet;
   }
-  // fund wallet
-  // withdraw funds
-  // transfer
+
+  async fetchWalletById(id: string) {
+    return await db(TableNames.WALLET).where({ id }).first();
+  }
+
+  async creditWallet(walletId: string, amount: number) {
+    return await db.transaction(async (trx) => {
+      const wallet = await trx(TableNames.WALLET)
+        .where({ id: walletId })
+        .first();
+
+      if (!wallet) {
+        throw new ApiError(httpStatus.NOT_FOUND, "Wallet not found");
+      }
+
+      // credit  action
+      await trx(TableNames.WALLET)
+        .where({ id: walletId })
+        .update({ balance: parseFloat(wallet.balance) + amount });
+      return trx(TableNames.WALLET).where({ id: wallet.id }).first();
+    });
+  }
+
+  async debitWallet(walletId: string, amount: number) {
+    return await db.transaction(async (trx) => {
+      const wallet = await trx(TableNames.WALLET)
+        .where({ id: walletId })
+        .first();
+
+      if (!wallet) {
+        throw new ApiError(httpStatus.NOT_FOUND, "Wallet not found");
+      }
+
+      if (parseFloat(wallet.balance) < amount) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "Insuffient funds");
+      }
+
+      // debit action
+      await trx(TableNames.WALLET)
+        .where({ id: walletId })
+        .update({ balance: parseFloat(wallet.balance) - amount });
+
+      return trx(TableNames.WALLET).where({ id: wallet.id }).first();
+    });
+  }
 }

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
+import { v4 as uuidv4 } from "uuid";
 import { IAuthLogin, IAuthRegister, TableNames } from "../interface";
 import UserService from "../services/user.service";
-import { v4 as uuidv4 } from "uuid";
 import { successResponse } from "../utils/response";
 import { catchError } from "../utils/catchError";
 import { AxiosService } from "../utils/axios";
@@ -58,20 +58,20 @@ export default class AuthController {
     // generate the user uuid;
     const userId = uuidv4();
 
-    // Create user
-    await db(TableNames.USER).insert({
-      id: userId,
-      email: payload.email.toLowerCase(),
-      password: hashedPassword,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      tranxPin: hashedPin,
-    });
+    await db.transaction(async (trx) => {
+      trx(TableNames.USER).insert({
+        id: userId,
+        email: payload.email.toLowerCase(),
+        password: hashedPassword,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        tranxPin: hashedPin,
+      });
 
-    // Create wallet
-    await db(TableNames.WALLET).insert({
-      id: uuidv4(),
-      userId,
+      await trx(TableNames.WALLET).insert({
+        id: uuidv4(),
+        userId,
+      });
     });
 
     // fetching customer with the wallet
@@ -148,7 +148,7 @@ export default class AuthController {
     return successResponse(
       res,
       "User logged in successfully",
-      { result },
+      result,
       httpStatus.CREATED
     );
   }

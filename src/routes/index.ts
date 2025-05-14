@@ -3,6 +3,7 @@ import AuthRoute from "./auth.route";
 import UserRoute from "./user.route";
 import { auth } from "../middlewares/auth.middleware";
 import WalletRoute from "./wallet.route";
+import TransactionRoute from "./transaction.route";
 
 export class Router {
   public routes: ExpressRouter;
@@ -15,5 +16,6 @@ export class Router {
     this.routes.use("/auth", new AuthRoute().router);
     this.routes.use("/user", auth, new UserRoute().router);
     this.routes.use("/wallets", auth, new WalletRoute().router);
+    this.routes.use("/transactions", auth, new TransactionRoute().router);
   }
 }

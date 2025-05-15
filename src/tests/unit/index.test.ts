@@ -37,7 +37,7 @@ describe("baseURL health check", () => {
 describe("successful user signup", () => {
   it("should return a user", async () => {
     const response = await supertest(app.app)
-      .post("/v1/auth/register")
+      .post("/api/v1/auth/register")
       .send(newUser)
       .set("Accept", "application/json");
 
@@ -52,7 +52,7 @@ describe("successful user signup", () => {
 describe("Failed user signup with existing email", () => {
   it("should return a 400", async () => {
     const response = await supertest(app.app)
-      .post("/v1/auth/register")
+      .post("/api/v1/auth/register")
       .send(newUser)
       .set("Accept", "application/json");
 
@@ -64,7 +64,7 @@ describe("Failed user signup with existing email", () => {
 describe("successful user login", () => {
   it("should return a token", async () => {
     const response = await supertest(app.app)
-      .post("/v1/auth/login")
+      .post("/api/v1/auth/login")
       .send(userLogin)
       .set("Accept", "application/json");
 
@@ -80,7 +80,7 @@ describe("failed user login", () => {
     userLogin.password = "Einstein2@";
 
     const response = await supertest(app.app)
-      .post("/v1/auth/login")
+      .post("/api/v1/auth/login")
       .send(userLogin)
       .set("Accept", "application/json");
 
@@ -92,7 +92,7 @@ describe("failed user login", () => {
 describe("get wallets of users", () => {
   it("should return all wallets successfully", async () => {
     const response = await supertest(app.app)
-      .get("/v1/wallets")
+      .get("/api/v1/wallets")
       .auth(TOKEN, { type: "bearer" });
 
     expect(response.status).toEqual(200);
@@ -110,7 +110,7 @@ describe("get wallets of users", () => {
 describe("fund user wallet", () => {
   it("should credit a user's wallet", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/fund`)
+      .post(`/api/v1/wallets/fund`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ amount: 5000 });
@@ -123,7 +123,7 @@ describe("fund user wallet", () => {
 describe("successful wallet withdrawal", () => {
   it("should debit a user's wallet", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/withdraw`)
+      .post(`/api/v1/wallets/withdraw`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ pin: newUser.pin, amount: 1000 });
@@ -136,7 +136,7 @@ describe("successful wallet withdrawal", () => {
 describe("failed wallet withdrawal", () => {
   it("should fail to debit a user's wallet due to insufficient balance", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/withdraw`)
+      .post(`/api/v1/wallets/withdraw`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ pin: newUser.pin, amount: 7000 });
@@ -149,7 +149,7 @@ describe("failed wallet withdrawal", () => {
 describe("failed wallet withdrawal", () => {
   it("should fail to debit a user's wallet due to incorrect pin", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/withdraw`)
+      .post(`/api/v1/wallets/withdraw`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ pin: "0000", amount: 7000 });
@@ -162,7 +162,7 @@ describe("failed wallet withdrawal", () => {
 describe("successful wallet transfer", () => {
   it("should transfer to another user", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/transfer`)
+      .post(`/api/v1/wallets/transfer`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ pin: newUser.pin, amount: 1000, receiverWalletId });
@@ -175,7 +175,7 @@ describe("successful wallet transfer", () => {
 describe("failed wallet transfer", () => {
   it("should fail to transfer due to insufficient balance", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/transfer`)
+      .post(`/api/v1/wallets/transfer`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({ pin: newUser.pin, amount: 7000, receiverWalletId });
@@ -188,7 +188,7 @@ describe("failed wallet transfer", () => {
 describe("failed wallet transfer", () => {
   it("should fail to transfer user's wallet", async () => {
     const response = await supertest(app.app)
-      .post(`/v1/wallets/transfer`)
+      .post(`/api/v1/wallets/transfer`)
       .auth(TOKEN, { type: "bearer" })
       .set("Accept", "application/json")
       .send({

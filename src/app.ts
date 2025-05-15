@@ -95,7 +95,7 @@ class App {
         .json({ status: true, message: "Welcoome to demo credit api" });
     });
     // V1 API routes
-    this.app.use("/v1", router.routes);
+    this.app.use("/api/v1", router.routes);
 
     // Send back a 404 error for any unknown API request
     this.app.use((req: Request, res: Response, next: NextFunction) => {

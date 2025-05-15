@@ -13,11 +13,13 @@ interface EnvVars {
   DB_USER: string;
   DB_PASSWORD: string;
   DB_NAME: string;
+  DB_TEST_NAME: string;
   DB_PORT: string;
   PASSWORD_SALT: string;
   PIN_SALT: string;
   ADJUTOR_BASE_URL: string;
   ADJUTOR_API_KEY: string;
+  APP_NAME: string;
 }
 
 const envVarsSchema = Joi.object<EnvVars>({
@@ -29,11 +31,13 @@ const envVarsSchema = Joi.object<EnvVars>({
   DB_USER: Joi.string().required(),
   DB_PASSWORD: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  DB_TEST_NAME: Joi.string(),
   DB_PORT: Joi.string().required().default("9090"),
   PASSWORD_SALT: Joi.string().required(),
   PIN_SALT: Joi.string().required(),
   ADJUTOR_BASE_URL: Joi.string().required(),
   ADJUTOR_API_KEY: Joi.string().required(),
+  APP_NAME: Joi.string().required(),
 }).unknown();
 
 const { value: envVars, error } = envVarsSchema
@@ -45,6 +49,7 @@ if (error) {
 }
 
 const config = {
+  appName: envVars.APP_NAME,
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   jwt: {
@@ -56,6 +61,7 @@ const config = {
     user: envVars.DB_USER,
     password: envVars.DB_PASSWORD,
     name: envVars.DB_NAME,
+    test_name: envVars.DB_TEST_NAME,
     port: envVars.DB_PORT,
   },
   password: {

@@ -58,20 +58,19 @@ export default class AuthController {
     // generate the user uuid;
     const userId = uuidv4();
 
-    await db.transaction(async (trx) => {
-      trx(TableNames.USER).insert({
-        id: userId,
-        email: payload.email.toLowerCase(),
-        password: hashedPassword,
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        tranxPin: hashedPin,
-      });
+    await db(TableNames.USER).insert({
+      id: userId,
+      email: payload.email.toLowerCase(),
+      password: hashedPassword,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      tranxPin: hashedPin,
+    });
 
-      await trx(TableNames.WALLET).insert({
-        id: uuidv4(),
-        userId,
-      });
+    // Create wallet
+    await db(TableNames.WALLET).insert({
+      id: uuidv4(),
+      userId,
     });
 
     // fetching customer with the wallet
@@ -123,7 +122,10 @@ export default class AuthController {
     );
 
     if (!isPasswordMatch) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Incorrect email or password");
+      throw new ApiError(
+        httpStatus.UNAUTHORIZED,
+        "Incorrect email or password"
+      );
     }
 
     const jwt = new JWTService();
@@ -149,7 +151,7 @@ export default class AuthController {
       res,
       "User logged in successfully",
       result,
-      httpStatus.CREATED
+      httpStatus.OK
     );
   }
 }

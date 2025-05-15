@@ -68,8 +68,6 @@ export default class WalletController {
 
     const isPinMatch = compareHash(pin, tranxPin);
 
-    console.log({ isPinMatch });
-
     if (!isPinMatch) {
       throw new ApiError(httpStatus.FORBIDDEN, "Invalid pin");
     }
@@ -118,6 +116,13 @@ export default class WalletController {
     const receiverWallet = await walletService.fetchWalletById(
       receiverWalletId
     );
+
+    if (senderWallet.id === receiverWallet.id) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "User cannot transfer to self, instead perform a fund operation"
+      );
+    }
 
     if (!receiverWallet) {
       throw new ApiError(httpStatus.NOT_FOUND, "User wallet not found");

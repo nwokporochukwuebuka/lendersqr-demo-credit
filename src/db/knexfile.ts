@@ -58,6 +58,22 @@ const dbConfig: IKnexConfig = {
       directory: path.join(__dirname + "/seeds"),
     },
   },
+  test: {
+    client: "mysql2",
+    connection: {
+      host: config.db.host,
+      port: Number(config.db.port),
+      password: config.db.password,
+      database: config.db.name,
+      user: config.db.user,
+    },
+    migrations: {
+      directory: path.join(__dirname + "/migrations"),
+    },
+    seeds: {
+      directory: path.join(__dirname + "/seeds"),
+    },
+  },
 };
 
 export default dbConfig;

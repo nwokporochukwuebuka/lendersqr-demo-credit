@@ -41,8 +41,7 @@ export default class AuthController {
 
     if (error) {
       throw new ApiError(httpStatus.BAD_REQUEST, error.message);
-      // @ts-ignore
-    } else if (data?.status !== "success") {
+    } else if ((data as { status: string }).status !== "success") {
       throw new ApiError(
         httpStatus.BAD_REQUEST,
         "This user has been blacklisted"

@@ -4,6 +4,22 @@ import ApiError from "../utils/ApiError";
 import JWTService from "../services/jwt.service";
 import UserService from "../services/user.service";
 
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  tranxPin: string;
+  password: string;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: User;
+    }
+  }
+}
+
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -21,7 +37,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Invalid credentials");
   }
 
-  // @ts-ignore
   req.user = user;
 
   next();

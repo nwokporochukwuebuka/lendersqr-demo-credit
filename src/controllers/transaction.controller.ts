@@ -5,7 +5,6 @@ import { successResponse } from "../utils/response";
 
 export default class TransactionController {
   async fetchUserWalletTransaction(req: Request, res: Response) {
-    // @ts-ignore
     const { id } = req.user;
     const { page = "1", limit = "10" } = req.query;
 

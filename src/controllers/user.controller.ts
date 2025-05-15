@@ -5,7 +5,6 @@ import httpStatus from "http-status";
 
 export default class UserController {
   public async fetchProfile(req: Request, res: Response) {
-    // @ts-ignore
     const userId = req.user.id;
 
     const userService = new UserService();

@@ -19,7 +19,6 @@ export default class WalletController {
   }
 
   async fetchUsersWallet(req: Request, res: Response) {
-    // @ts-ignore
     const userId = req.user.id;
     const walletService = new WalletService();
 
@@ -31,7 +30,6 @@ export default class WalletController {
   }
 
   async fundWallet(req: Request, res: Response) {
-    // @ts-ignore
     const userId = req.user.id;
     const { amount } = req.body;
 
@@ -63,7 +61,7 @@ export default class WalletController {
 
   async withdrawFunds(req: Request, res: Response) {
     const { amount, pin } = req.body;
-    // @ts-ignore
+
     const { id, tranxPin } = req.user;
 
     const isPinMatch = compareHash(pin, tranxPin);
@@ -97,7 +95,6 @@ export default class WalletController {
   }
 
   async transferFunds(req: Request, res: Response) {
-    // @ts-ignore
     const { id, tranxPin } = req.user;
 
     const { receiverWalletId, amount, pin } = req.body;

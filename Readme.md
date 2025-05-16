@@ -72,7 +72,7 @@ Before setting up this assessment, make sure you have the following installed on
      Login to the MySQL server using this command
 
    ```bash
-   sudo -u root -p
+   sudo mysql -u root -p
    ```
 
    Enter the password and then run the following SQL commands :
